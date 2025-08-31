@@ -65,18 +65,6 @@ psql -U postgres -d your_db -f playground.sql
 ## ✅ Tips
 
 - You can safely re-run `init.sql` — it uses `if not exists` / `drop` for idempotency.
-- Feel free to extend `playground.sql` with your own queries.
-- Recommended tools: `psql`, DBeaver, TablePlus, Supabase Studio.
-
----
-
-## 🧠 Why This Project?
-
-Because you shouldn’t have to open pgAdmin or use a fancy ORM just to understand:
-
-- What’s really happening in PostgreSQL
-- Why it's different from MySQL
-- And how to write expressive, powerful SQL
 
 ---
 
