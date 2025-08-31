@@ -1,11 +1,23 @@
-# PostgreSQL Learning Playground
+# PostgreSQL Learning Project
 
-🧠 本项目用于系统性学习 PostgreSQL 特性，特别是函数（functions）、触发器（triggers）、RLS 行级权限等内容。
+This is a minimal PostgreSQL learning project designed to help you master core PostgreSQL features through raw SQL, with a focus on:
 
-## 📦 使用方式
+- Differences from MySQL
+- Practical use of data types like `uuid`, `timestamptz`, and `jsonb`
+- SQL functions and expressions
+- Indexes and performance basics
+- Row Level Security (RLS)
 
-1. 本地已安装 PostgreSQL
-2. 创建数据库：
-   ```bash
-   createdb pg_learn
-   ```
+No ORMs. No frameworks. Just SQL.
+
+---
+
+## 📁 Project Structure
+
+```bash
+postgresql-learning/
+├── init.sql         # Create tables, insert data, create indexes and functions
+├── rls.sql          # Enable RLS and apply row-level access control policies
+├── playground.sql   # Query test: JSON, functions, pagination, subqueries, etc.
+└── README.md        # This file
+```
