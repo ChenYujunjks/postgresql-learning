@@ -4,8 +4,7 @@ import (
 	"fmt"
 	"log"
 
-	"gorm.io/driver/postgres"
-	
+	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
 
@@ -17,10 +16,9 @@ type User struct {
 }
 
 func main() {
-	// DSN 替换成你自己的数据库信息
-	dsn := "host=localhost user=postgres password=你的密码 dbname=你的数据库名 port=5432 sslmode=disable"
 
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
+	db, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{}) // 内存数据库 test.db
+
 	if err != nil {
 		log.Fatal("❌ 连接数据库失败:", err)
 	}
