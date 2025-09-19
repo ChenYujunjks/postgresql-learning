@@ -30,38 +30,68 @@ func main() {
 		log.Fatal("❌ 自动迁移失败:", err)
 	}
 
-	// -------------------------
-	// 事务开始
-	// -------------------------
+	// ======================
+	// 实验 1：故意写错 SQL，看看回滚效果
+	// ======================
+	fmt.Println("\n🚨 实验 1：制造错误，看看事务会不会回滚")
+
 	err = db.Transaction(func(tx *gorm.DB) error {
-		// 1. ORM 插入
+		// ORM 插入 Charlie
 		user := User{Name: "Charlie", Email: "charlie@temp.com"}
 		if err := tx.Create(&user).Error; err != nil {
-			return err // 出错 → 回滚
+			return err
 		}
 		fmt.Println("📌 插入用户:", user)
 
-		// 2. Raw SQL 更新（这里故意写个错误示例，你可以改对）
-		if err := tx.Exec("UPDATE users SET email=? WHERE name=?", "charlie@example.com", "Charlie").Error; err != nil {
+		// 故意写错 SQL (tablename 错误 "userrs")
+		if err := tx.Exec("UPDATE userrs SET email=? WHERE name=?", "charlie@example.com", "Charlie").Error; err != nil {
 			return err // 出错 → 回滚
 		}
-		fmt.Println("📌 更新 Charlie 邮箱成功")
 
-		// 如果都成功，return nil → 提交事务
 		return nil
 	})
 
-	// -------------------------
-	// 事务结束
-	// -------------------------
 	if err != nil {
-		fmt.Println("❌ 事务失败，已回滚:", err)
+		fmt.Println("❌ 实验 1 事务失败，已回滚:", err)
 	} else {
-		fmt.Println("✅ 事务提交成功")
+		fmt.Println("✅ 实验 1 事务成功提交")
 	}
 
-	// 检查 Charlie 的数据
-	var charlie User
-	db.Where("name = ?", "Charlie").First(&charlie)
-	fmt.Println("📌 最终数据库里的 Charlie:", charlie)
+	// 查看数据库里有没有 Charlie
+	var check1 User
+	db.Where("name = ?", "Charlie").First(&check1)
+	fmt.Println("📌 实验 1 结束后，数据库里的 Charlie:", check1)
+
+	// ======================
+	// 实验 2：修正 SQL，事务成功提交
+	// ======================
+	fmt.Println("\n✅ 实验 2：修正 SQL，事务应该成功提交")
+
+	err = db.Transaction(func(tx *gorm.DB) error {
+		// ORM 插入 Charlie
+		user := User{Name: "Charlie", Email: "charlie@temp.com"}
+		if err := tx.Create(&user).Error; err != nil {
+			return err
+		}
+		fmt.Println("📌 插入用户:", user)
+
+		// 正确 SQL
+		if err := tx.Exec("UPDATE users SET email=? WHERE name=?", "charlie@example.com", "Charlie").Error; err != nil {
+			return err
+		}
+		fmt.Println("📌 更新 Charlie 邮箱成功")
+
+		return nil
+	})
+
+	if err != nil {
+		fmt.Println("❌ 实验 2 事务失败，已回滚:", err)
+	} else {
+		fmt.Println("✅ 实验 2 事务成功提交")
+	}
+
+	// 查看数据库里最终的 Charlie
+	var check2 User
+	db.Where("name = ?", "Charlie").First(&check2)
+	fmt.Println("📌 实验 2 结束后，数据库里的 Charlie:", check2)
 }
