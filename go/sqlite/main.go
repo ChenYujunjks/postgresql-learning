@@ -8,7 +8,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// 模型
 type User struct {
 	ID    uint `gorm:"primaryKey"`
 	Name  string
@@ -29,9 +28,7 @@ func main() {
 		log.Fatal("❌ 自动迁移失败:", err)
 	}
 
-	// ======================
 	// 实验 1：故意写错 SQL，看看回滚效果
-	// ======================
 	fmt.Println("\n🚨 实验 1：制造错误，看看事务会不会回滚")
 
 	err = db.Transaction(func(tx *gorm.DB) error {
@@ -61,9 +58,7 @@ func main() {
 	db.Where("name = ?", "Charlie").First(&check1)
 	fmt.Println("📌 实验 1 结束后，数据库里的 Charlie:", check1)
 
-	// ======================
 	// 实验 2：修正 SQL，事务成功提交
-	// ======================
 	fmt.Println("\n✅ 实验 2：修正 SQL，事务应该成功提交")
 
 	err = db.Transaction(func(tx *gorm.DB) error {
@@ -89,7 +84,6 @@ func main() {
 		fmt.Println("✅ 实验 2 事务成功提交")
 	}
 
-	// 查看数据库里最终的 Charlie
 	var check2 User
 	db.Where("name = ?", "Charlie").First(&check2)
 	fmt.Println("📌 实验 2 结束后，数据库里的 Charlie:", check2)
