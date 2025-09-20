@@ -16,8 +16,7 @@ type User struct {
 }
 
 func main() {
-	// 连接信息
-	dsn := "host=localhost user=postgres password=你的密码 dbname=你的数据库名 port=5432 sslmode=disable TimeZone=Asia/Shanghai"
+	dsn := "host=localhost user=postgres password=1532 dbname=postgres port=5432 sslmode=disable"
 
 	// 打开连接
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{})
@@ -35,17 +34,17 @@ func main() {
 	db.Create(&User{Name: "Alice", Email: "alice@example.com"})
 	db.Create(&User{Name: "Bob", Email: "bob@abc.com"})
 
-	// 2. 用 ORM 查询
+	// 用 ORM 查询
 	var user1 User
 	db.First(&user1, 1) // 主键=1
 	fmt.Println("📌 ORM 查询:", user1)
 
-	// 3. 用 Raw SQL 查询
+	// 用 Raw SQL 查询
 	var user2 User
 	db.Raw("SELECT id, name, email FROM users WHERE email LIKE ?", "%@example.com").Scan(&user2)
 	fmt.Println("📌 Raw SQL 查询:", user2)
 
-	// 4. 用 Raw SQL 更新
+	// 用 Raw SQL 更新
 	db.Exec("UPDATE users SET email = ? WHERE name = ?", "bob@example.com", "Bob")
 
 	// 再次 ORM 查询
