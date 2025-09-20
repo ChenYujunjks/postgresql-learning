@@ -32,29 +32,20 @@ func main() {
 		log.Fatal("❌ 自动迁移失败:", err)
 	}
 
-	// -------------------------
-	// 1. ORM 插入
-	// -------------------------
 	db.Create(&User{Name: "Alice", Email: "alice@example.com"})
 	db.Create(&User{Name: "Bob", Email: "bob@abc.com"})
 
-	// -------------------------
 	// 2. 用 ORM 查询
-	// -------------------------
 	var user1 User
 	db.First(&user1, 1) // 主键=1
 	fmt.Println("📌 ORM 查询:", user1)
 
-	// -------------------------
 	// 3. 用 Raw SQL 查询
-	// -------------------------
 	var user2 User
 	db.Raw("SELECT id, name, email FROM users WHERE email LIKE ?", "%@example.com").Scan(&user2)
 	fmt.Println("📌 Raw SQL 查询:", user2)
 
-	// -------------------------
 	// 4. 用 Raw SQL 更新
-	// -------------------------
 	db.Exec("UPDATE users SET email = ? WHERE name = ?", "bob@example.com", "Bob")
 
 	// 再次 ORM 查询
